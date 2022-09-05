@@ -1,0 +1,131 @@
+import WasmI64 from "runtime/unsafe/wasmi64"
+import WasmI32 from "runtime/unsafe/wasmi32"
+
+/**
+   * Create a message with a tag, and an initial capacity.
+   *
+   * @param {i64} tag - The tag for the data message.
+   * @param {u64} capacity - The initial size of the data.
+   */
+export foreign wasm create_data: (
+  WasmI64,
+  WasmI64,
+) -> Void from "lunatic::message"
+
+/**
+   * Write data to the message.
+   *
+   * @param data - A pointer to the data.
+   * @param data_len - The length of the data.
+   */
+export foreign wasm write_data: (
+  WasmI64,
+  WasmI64,
+) -> WasmI64 from "lunatic::message"
+
+/**
+   * Read a number of bytes from the message.
+   *
+   * @param {usize} data - A pointer to a buffer to write data to, read from the message.
+   * @param {usize} data_len - The length of the buffer.
+   */
+export foreign wasm read_data: (
+  WasmI64,
+  WasmI64,
+) -> WasmI64 from "lunatic::message"
+
+/**
+   * Move the data buffer index.
+   *
+   * @param {usize} position - The position for the buffer to read from.
+   */
+export foreign wasm seek_data: WasmI64 -> Void from "lunatic::message"
+
+/**
+   * Get the message tag.
+   */
+export foreign wasm get_tag: () -> WasmI64 from "lunatic::message"
+
+/**
+   * Get the size of the data message.
+   */
+export foreign wasm data_size: () -> WasmI64 from "lunatic::message"
+
+/**
+   * Push a process to the resource list, and return it's resource id.
+   *
+   * @param {u64} process_id - The process to be transferred.
+   * @returns The resource id.
+   */
+export foreign wasm push_process: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Take a process handle from the resource list by it's id.
+   *
+   * @param {u64} index - The resource id.
+   * @returns The process id.
+   */
+export foreign wasm take_process: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Push a tcp stream to the resource list.
+   *
+   * @param {u64} tcp_stream_id - The tcp stream id.
+   * @returns The resource ID.
+   */
+export foreign wasm push_tcp_stream: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Take a tcp stream from the resource list by it's resource id.
+   *
+   * @param {u64} index - The resource id.
+   * @returns The tcp id.
+   */
+export foreign wasm take_tcp_stream: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Send the current message to a process.
+   *
+   * @param {u64} process_id - The process id.
+   */
+export foreign wasm send: WasmI64 -> Void from "lunatic::message"
+
+/**
+   * Push a socket to the resource list.
+   * @param socket_id - The socket id.
+   * @returns The resource id.
+   */
+export foreign wasm push_udp_socket: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Take a socket from the resource list by it's resource id.
+   *
+   * @param resource_id - The resource id of the socket.
+   * @returns The socket id.
+   */
+export foreign wasm take_udp_socket: WasmI64 -> WasmI64 from "lunatic::message"
+
+/**
+   * Send a message, skipping search, with a timeout.
+   *
+   * @param {u64} process_id - The process id to send the message.
+   * @param {u32} timeout - A timeout message.
+   */
+export foreign wasm send_receive_skip_search: (
+  WasmI64,
+  WasmI32,
+) -> WasmI64 from "lunatic::message"
+
+/**
+   * Receive a message with a set of tags if given and a timeout.
+   *
+   * @param tag - A message tag to look for.
+   * @param tag_length - A preallocated buffer capacity hint.
+   * @param timeout - A timespan for how long it takes for receiving a message to timeout.
+   * @returns {MessageType} The type of lunatic message being received.
+   */
+export foreign wasm receive: (
+  WasmI64,
+  WasmI64,
+  WasmI32,
+) -> WasmI64 from "lunatic::message"
