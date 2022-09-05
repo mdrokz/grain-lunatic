@@ -1,0 +1,26 @@
+import WasmI64 from "runtime/unsafe/wasmi64"
+
+    /**
+     * Obtain the length of an error string.
+     *
+     * @param {u64} id - The id of the error.
+     * @returns {usize} The length of the string.
+     */
+export foreign wasm string_size: (WasmI64) -> WasmI64 from "lunatic::error"
+
+
+/**
+     * Write the utf8 string into memory.
+     *
+     * @param {u64} id - The error id.
+     * @param {usize} ptr [*mut u8] The pointer to memory where it will be written.
+     */
+export foreign wasm to_string: (WasmI64,WasmI64) -> Void from "lunatic::error"
+
+
+ /**
+     * Drop the error
+     *
+     * @param {u64} id - The error id.
+     */
+export foreign wasm drop_error: (WasmI64) -> Void from "lunatic::error"
