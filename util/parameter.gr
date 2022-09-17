@@ -1,0 +1,47 @@
+/**
+ * @module Parameter: Tag module used for tagging parameters for remote function calls when starting a process .
+ *
+ * @example import Parameter from "parameter"
+ */
+
+import WasmI64 from "runtime/unsafe/wasmi64"
+import WasmI32 from "runtime/unsafe/wasmi32"
+import Iovec from "runtime/wasi"
+
+@disableGC
+let _PARAMS = 0n
+
+@disableGC
+let mut _PARAM_COUNT = 0n
+
+@disableGC
+let mut _PARAM_OFFSET = 0n
+
+@unsafe
+@disableGC
+export let reset /*: () -> Parameter*/ = () => {
+    _PARAM_COUNT = 0n
+    _PARAM_OFFSET = 0n
+
+    let ret = WasmI32.toGrain(_PARAMS)
+
+    ret
+}
+
+
+@unsafe
+@disableGC
+export let i32 = (val) => {
+    _PARAM_COUNT = WasmI32.add(_PARAM_COUNT,1n)
+    WasmI32.store8(WasmI32.add(_PARAMS,_PARAM_OFFSET),0x7En,0n)
+    WasmI32.store(WasmI32.add(_PARAMS,_PARAM_OFFSET),val,1n)
+    _PARAM_OFFSET = WasmI32.add(_PARAM_OFFSET,17n)
+
+
+    // convert whatever value is loaded at that offset to a grain value
+    let ret = WasmI32.toGrain(WasmI32.load(WasmI32.add(_PARAMS,_PARAM_OFFSET),1n))
+
+    // let ret = WasmI32.toGrain(_PARAMS)
+
+    ret
+}
